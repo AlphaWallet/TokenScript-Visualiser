@@ -5,6 +5,7 @@ To Run:
 
 From Intellij GUI: 
   click 'Gradle'->'tokenscriptviewer'->Tasks->application->bootRun
+
 From commandline: 
   > gradlew bootRun
   
