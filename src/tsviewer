@@ -15,6 +15,11 @@ set xp-attributes {
     {origins	Origins	name(ts:origins/*[1])} 
 }
 
+set xp-cards {
+    {type	Type	@type}
+    {view-lang	View-Languages ts:view/@xml:lang}
+}
+
 if { $argc != 1 } {
     puts "Requires one argument: the filename of a tokenscript."
     puts "For example, try $argv0 ../../TokenScript-Examples/examples/UEFA/UEFA.xml"
@@ -34,10 +39,13 @@ pack [ttk::notebook .nb]
 set doc [dom parse [read $data]]
 set root [$doc documentElement]
 
-set aNodes [$root selectNodes -namespace $NS {//ts:attribute}]
+set nodes [$root selectNodes -namespace $NS {//ts:attribute}]
+puts [table .nb.f1.table $nodes {*}${xp-attributes}]
 
-puts [table .nb.f1.table $aNodes {*}${xp-attributes}]
+set nodes [$root selectNodes -namespace $NS {/ts:token/ts:cards/ts:card}]
+puts [table .nb.f2.table $nodes {*}${xp-cards}]
 
 pack .nb.f1.table
+pack .nb.f2.table
 
 $doc delete
