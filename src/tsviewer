@@ -1,0 +1,43 @@
+#!/usr/bin/tclsh
+#                          this is a -*-Tcl-*- file
+package require tdom
+package require Tk
+
+# gives us [table]
+source treemaker.tcl
+
+set NS   {ts http://tokenscript.org/2020/06/tokenscript}
+
+# XPaths
+set xp-attributes {
+    {label	Label	string(ts:label/ts:string/text())}
+    {syntax	Syntax	string(ts:type/ts:syntax/text())}
+    {origins	Origins	name(ts:origins/*[1])} 
+}
+
+if { $argc != 1 } {
+    puts "Requires one argument: the filename of a tokenscript."
+    puts "For example, try $argv0 ../../TokenScript-Examples/examples/UEFA/UEFA.xml"
+    puts "Please try again."
+    exit 255
+} else {
+    set data [open [lindex $argv 0] r]
+}
+
+pack [ttk::notebook .nb]
+.nb add [frame .nb.f1] -text "Token Attributes"
+.nb add [frame .nb.f2] -text "Cards"
+.nb add [frame .nb.f3] -text "Data Objects"
+.nb add [frame .nb.f4] -text "Selections"
+.nb add [frame .nb.f5] -text "Translations"
+
+set doc [dom parse [read $data]]
+set root [$doc documentElement]
+
+set aNodes [$root selectNodes -namespace $NS {//ts:attribute}]
+
+puts [table .nb.f1.table $aNodes {*}${xp-attributes}]
+
+pack .nb.f1.table
+
+$doc delete
