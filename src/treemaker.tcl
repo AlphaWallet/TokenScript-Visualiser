@@ -22,14 +22,8 @@ proc table {pathname nodes args} {
     }
 
     return [lmap node $nodes {
-        if [$node hasAttribute name] {
-            set name [$node getAttribute name]
-        } else {
-            set name  ""
-        }
-        set values [lmap col $args {
-            $node selectNodes [lindex $col 2]
-        }]
+        set name [expr {[$node hasAttribute name]?[$node getAttribute name]:""}]
+        set values [lmap col $args {$node selectNodes [lindex $col 2]}]
         $pathname insert {} end -text $name -values $values
     }]
 }

@@ -37,7 +37,7 @@ set xp-localisation {
 
 if { $argc != 1 } {
     puts "Requires one argument: the filename of a tokenscript."
-    puts "For example, try $argv0 ../../TokenScript-Examples/examples/UEFA/UEFA.xml"
+    puts "For example, try $argv0 examples/ENS/ENS.xml"
     puts "Please try again."
     exit 255
 } else {
