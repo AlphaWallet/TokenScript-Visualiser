@@ -6,9 +6,11 @@ package require Tk
 # gives us [table]
 source treemaker.tcl
 
-set TS   {ts http://tokenscript.org/2020/06/tokenscript}
-set ASNX {asnx urn:ietf:params:xml:ns:asnx}
-set ETH  {ethereum urn:ethereum:constantinople}
+set NS {
+    ts http://tokenscript.org/2020/06/tokenscript
+    asnx urn:ietf:params:xml:ns:asnx
+    ethereum urn:ethereum:constantinople
+}
 
 # XPaths (tcl variables allowed in it, read domNode(3tcl)
 set xp-attributes {
@@ -44,16 +46,17 @@ pack [ttk::notebook .nb]
 .nb add [frame .nb.f5] -text "Translations"
 
 set doc [dom parse [read $data]]
+$doc selectNodesNamespaces $NS
 set root [$doc documentElement]
 
-set nodes [$root selectNodes -namespace $TS {//ts:attribute}]
-puts [table .nb.f1.table $nodes $TS {*}${xp-attributes}]
+set nodes [$root selectNodes {//ts:attribute}]
+puts [table .nb.f1.table $nodes {*}${xp-attributes}]
 
-set nodes [$root selectNodes -namespace $TS {/ts:token/ts:cards/ts:card}]
-puts [table .nb.f2.table $nodes $TS {*}${xp-cards}]
+set nodes [$root selectNodes {/ts:token/ts:cards/ts:card}]
+puts [table .nb.f2.table $nodes {*}${xp-cards}]
 
-set nodes [$root selectNodes -namespace $ASNX {//asnx:module}]
-puts [table .nb.f3.table $nodes $ETH {*}${xp-dataObjects}]
+set nodes [$root selectNodes {//asnx:module}]
+puts [table .nb.f3.table $nodes {*}${xp-dataObjects}]
 
 pack .nb.f1.table
 pack .nb.f2.table

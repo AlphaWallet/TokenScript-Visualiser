@@ -7,7 +7,7 @@
 # note that variable $name can be used in the xpath which, for each
 # row, will be replaced by the @name value of the node of that row.
 
-proc table {pathname nodes ns args} {
+proc table {pathname nodes args} {
 
     foreach col $args {
         if {[llength $col] != 3} {
@@ -28,8 +28,7 @@ proc table {pathname nodes ns args} {
             set name  ""
         }
         set values [lmap col $args {
-            set xpath [subst -nocommands -nobackslashes [lindex $col 2]]
-            $node selectNodes -namespace $ns [lindex $col 2]
+            $node selectNodes [lindex $col 2]
         }]
         $pathname insert {} end -text $name -values $values
     }]
