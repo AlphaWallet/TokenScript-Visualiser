@@ -25,8 +25,14 @@ set xp-cards {
 }
 
 set xp-dataObjects {
-    {elements	Elements string(//element/@name)}
+    {elements	Elements //element/@name}
     {references	References count(ancestor-or-self::node()[last()]//ethereum:event[@module=$name])}
+}
+
+set xp-localisation {
+    {parent	Of	name(..)}
+    {name	Name	../@name}
+    {l10n	Localistaion string(.//ts:string)}
 }
 
 if { $argc != 1 } {
@@ -42,8 +48,7 @@ pack [ttk::notebook .nb]
 .nb add [frame .nb.f1] -text "Token Attributes"
 .nb add [frame .nb.f2] -text "Cards"
 .nb add [frame .nb.f3] -text "Data Objects"
-.nb add [frame .nb.f4] -text "Selections"
-.nb add [frame .nb.f5] -text "Translations"
+.nb add [frame .nb.f4] -text "Strings"
 
 set doc [dom parse [read $data]]
 $doc selectNodesNamespaces $NS
@@ -58,8 +63,12 @@ puts [table .nb.f2.table $nodes {*}${xp-cards}]
 set nodes [$root selectNodes {//asnx:module}]
 puts [table .nb.f3.table $nodes {*}${xp-dataObjects}]
 
+set nodes [$root selectNodes {//ts:label}]
+puts [table .nb.f4.table $nodes {*}${xp-localisation}]
+
 pack .nb.f1.table
 pack .nb.f2.table
 pack .nb.f3.table
+pack .nb.f4.table
 
 $doc delete
