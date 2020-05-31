@@ -6,18 +6,25 @@ package require Tk
 # gives us [table]
 source treemaker.tcl
 
-set NS   {ts http://tokenscript.org/2020/06/tokenscript}
+set TS   {ts http://tokenscript.org/2020/06/tokenscript}
+set ASNX {asnx urn:ietf:params:xml:ns:asnx}
+set ETH  {ethereum urn:ethereum:constantinople}
 
-# XPaths
+# XPaths (tcl variables allowed in it, read domNode(3tcl)
 set xp-attributes {
     {label	Label	string(ts:label/ts:string/text())}
     {syntax	Syntax	string(ts:type/ts:syntax/text())}
-    {origins	Origins	name(ts:origins/*[1])} 
+    {origins	Origins	name(ts:origins/*)}
 }
 
 set xp-cards {
     {type	Type	@type}
     {view-lang	View-Languages ts:view/@xml:lang}
+}
+
+set xp-dataObjects {
+    {elements	Elements string(//element/@name)}
+    {references	References count(ancestor-or-self::node()[last()]//ethereum:event[@module=$name])}
 }
 
 if { $argc != 1 } {
@@ -39,13 +46,17 @@ pack [ttk::notebook .nb]
 set doc [dom parse [read $data]]
 set root [$doc documentElement]
 
-set nodes [$root selectNodes -namespace $NS {//ts:attribute}]
-puts [table .nb.f1.table $nodes {*}${xp-attributes}]
+set nodes [$root selectNodes -namespace $TS {//ts:attribute}]
+puts [table .nb.f1.table $nodes $TS {*}${xp-attributes}]
 
-set nodes [$root selectNodes -namespace $NS {/ts:token/ts:cards/ts:card}]
-puts [table .nb.f2.table $nodes {*}${xp-cards}]
+set nodes [$root selectNodes -namespace $TS {/ts:token/ts:cards/ts:card}]
+puts [table .nb.f2.table $nodes $TS {*}${xp-cards}]
+
+set nodes [$root selectNodes -namespace $ASNX {//asnx:module}]
+puts [table .nb.f3.table $nodes $ETH {*}${xp-dataObjects}]
 
 pack .nb.f1.table
 pack .nb.f2.table
+pack .nb.f3.table
 
 $doc delete

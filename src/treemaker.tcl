@@ -1,9 +1,18 @@
+# take a list of n nodes, create a table of n rows for each node,
+# extract columns of data by the columns defined in $args.
 
-proc table {pathname nodes args} {
-    global NS
+# $args: each column is defined as a 3-element list of
+#        {id, table-heading, xpath for value extraction}
+
+# note that variable $name can be used in the xpath which, for each
+# row, will be replaced by the @name value of the node of that row.
+
+proc table {pathname nodes ns args} {
+
     foreach col $args {
         if {[llength $col] != 3} {
-            exit "Column description should have exactly 3 items"
+            puts "Column description should have exactly 3 items: $col"
+            exit 255
         }
     }
     
@@ -19,7 +28,8 @@ proc table {pathname nodes args} {
             set name  ""
         }
         set values [lmap col $args {
-            $node selectNodes -namespace $NS [lindex $col 2]
+            set xpath [subst -nocommands -nobackslashes [lindex $col 2]]
+            $node selectNodes -namespace $ns [lindex $col 2]
         }]
         $pathname insert {} end -text $name -values $values
     }]
