@@ -3,6 +3,10 @@
 package require tdom
 package require Tk
 
+if {[info commands lmap] != "lmap"} {
+    source lmap.tcl
+}
+
 # gives us [table]
 source treemaker.tcl
 
