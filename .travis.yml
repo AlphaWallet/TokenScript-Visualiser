@@ -32,7 +32,7 @@ install:
   - true
 
 script:
-  - ./gradlew buildawalletdebug
+  - ./gradlew bootJar
 
 after_success:
  - bash <(curl -s https://codecov.io/bash)
