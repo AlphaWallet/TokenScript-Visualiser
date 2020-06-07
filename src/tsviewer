@@ -3,8 +3,8 @@
 package require tdom
 package require Tk
 
-# gives us [table]
-source treemaker.tcl
+# gives us [table] procedure
+source file.tcl
 
 set NS {
     ts http://tokenscript.org/2020/06/tokenscript
@@ -13,18 +13,18 @@ set NS {
 }
 
 # XPaths (tcl variables allowed in it, read domNode(3tcl)
-set xp-attributes {
+set xp-attribute {
     {label	Label	string(ts:label/ts:string/text())}
     {syntax	Syntax	string(ts:type/ts:syntax/text())}
     {origins	Origins	name(ts:origins/*)}
 }
 
-set xp-cards {
+set xp-card {
     {type	Type	@type}
     {view-lang	View-Languages ts:view/@xml:lang}
 }
 
-set xp-dataObjects {
+set xp-dataObject {
     {elements	Elements //element/@name}
     {references	References count(//ethereum:event[@module=$name])}
 }
@@ -35,14 +35,20 @@ set xp-localisation {
     {l10n	Localistaion string(.//ts:string)}
 }
 
-if { $argc != 1 } {
-    puts "Requires one argument: the filename of a tokenscript."
-    puts "For example, try $argv0 examples/ENS/ENS.xml"
-    puts "Please try again."
-    exit 255
-} else {
-    set data [open [lindex $argv 0] r]
-}
+#--------- UI elements that only need to be spawned once --------- 
+
+menu .mbar
+. configure -menu .mbar
+
+menu .mbar.file
+.mbar.file add command -label "New" -underline 0
+.mbar.file add command -label "Open..." -underline 0 \
+    -command { filemenu_open }
+
+.mbar add cascade -menu .mbar.file -label File \
+    -underline 0
+
+.mbar.file add command -label Exit -command { exit }
 
 pack [ttk::notebook .nb]
 .nb add [frame .nb.f1] -text "Token Attributes"
@@ -50,29 +56,22 @@ pack [ttk::notebook .nb]
 .nb add [frame .nb.f3] -text "Data Objects"
 .nb add [frame .nb.f4] -text "Strings"
 
-set doc [dom parse [read $data]]
-$doc selectNodesNamespaces $NS
-set root [$doc documentElement]
+ttk::frame .status
+ttk::label .status.filename -textvariable filename
 
-set nodes [$root selectNodes {//ts:attribute}]
-set rows [table .nb.f1.table $nodes {*}${xp-attributes}]
-.nb tab .nb.f1 -text "Token Attributes ([llength $rows])"
+pack .status.filename
+pack .status
 
-set nodes [$root selectNodes {/ts:token/ts:cards/ts:card}]
-set rows [table .nb.f2.table $nodes {*}${xp-cards}]
-.nb tab .nb.f2 -text "Cards ([llength $rows])"
+# $doc delete
 
-set nodes [$root selectNodes {//asnx:module}]
-set rows [table .nb.f3.table $nodes {*}${xp-dataObjects}]
-.nb tab .nb.f3 -text "Data Objects ([llength $rows])"
+#--------- process commandline parameters --------- 
 
-set nodes [$root selectNodes {//ts:label}]
-set rows [table .nb.f4.table $nodes {*}${xp-localisation}]
-.nb tab .nb.f4 -text "Strings ([llength $rows])"
 
-pack .nb.f1.table
-pack .nb.f2.table
-pack .nb.f3.table
-pack .nb.f4.table
-
-$doc delete
+if { $argc != 1 } {
+    puts "If you supply a parameter, it will be taken as a TokenScript filename"
+    puts "For example, try $argv0 examples/ENS/ENS.xml"
+} else {
+    set filename [lindex $argv 0]
+    set fileid [open $filename r]
+    doc_load $fileid
+}
