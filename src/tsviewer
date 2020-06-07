@@ -16,7 +16,13 @@ set NS {
     ethereum urn:ethereum:constantinople
 }
 
-# XPaths (tcl variables allowed in it, read domNode(3tcl)
+#--------- XPaths applied under each contrainers to get the columns
+
+set xp-contract {
+    {interface	Interface @interface}
+    {addresses	Addresses string(ts:address)}
+}
+
 set xp-attribute {
     {label	Label	string(ts:label/ts:string/text())}
     {syntax	Syntax	string(ts:type/ts:syntax/text())}
@@ -38,6 +44,12 @@ set xp-localisation {
     {name	Name	../@name}
     {l10n	Localistaion string(.//ts:string)}
 }
+
+set xp-selection {
+    {label	Label	string(ts:label/ts:string/text())}
+    {filter	Filter	@filter}
+}
+
 #--------- UI elements that only need to be spawned once --------- 
 
 menu .mbar
@@ -55,10 +67,12 @@ menu .mbar.file
 
 
 pack [ttk::notebook .nb]
+.nb add [frame .nb.f0] -text "Contracts"
 .nb add [frame .nb.f1] -text "Token Attributes"
 .nb add [frame .nb.f2] -text "Cards"
 .nb add [frame .nb.f3] -text "Data Objects"
 .nb add [frame .nb.f4] -text "Strings"
+.nb add [frame .nb.f5] -text "Selection"
 
 ttk::frame .status
 ttk::label .status.filename -textvariable filename
