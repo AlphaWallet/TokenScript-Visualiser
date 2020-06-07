@@ -31,7 +31,7 @@ proc table {pathname nodes args} {
 }
 
 
-proc doc_open {} {
+proc filemenu_open {} {
     global filename
     set file_types {
         { {TokenScript XML Files} { .xml .XML} }
