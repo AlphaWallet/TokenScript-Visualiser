@@ -6,6 +6,10 @@ package require Tk
 # gives us [table] procedure
 source file.tcl
 
+if {[info commands lmap] != "lmap"} {
+    source lmap.tcl
+}
+
 set NS {
     ts http://tokenscript.org/2020/06/tokenscript
     asnx urn:ietf:params:xml:ns:asnx
@@ -34,7 +38,6 @@ set xp-localisation {
     {name	Name	../@name}
     {l10n	Localistaion string(.//ts:string)}
 }
-
 #--------- UI elements that only need to be spawned once --------- 
 
 menu .mbar
@@ -49,6 +52,7 @@ menu .mbar.file
     -underline 0
 
 .mbar.file add command -label Exit -command { exit }
+
 
 pack [ttk::notebook .nb]
 .nb add [frame .nb.f1] -text "Token Attributes"
@@ -75,3 +79,4 @@ if { $argc != 1 } {
     set fileid [open $filename r]
     doc_load $fileid
 }
+
