@@ -1,20 +1,22 @@
-# TokenscriptViewer
-Standalone TokenScript web viewer for reference
 
-To Run:
+# TokenScript Visualiser
 
-From Intellij GUI: 
-  click 'Gradle'->'tokenscriptviewer'->Tasks->application->bootRun
+You can use the TokenScript Viewer to see the major parts in a TokenScript file.
 
-From commandline: 
-  > gradlew bootRun
-  
-For default tokenscript demo just go to localhost:8080
+Here is the instruction:
 
-To view different tokens use:
+1. Check your dependency. On OS X everything needed is shipped. On Ubuntu, you need to install 3 packages: tcl, tk, tdom at the outset.
 
-```localhost:8080?token=<Token Address>&tokenId=<TokenId Hex>&chainId=<Eth chain eg 1 for main net>```
-  
-EG:
+2. Clone it to get the source code:
 
-```localhost:8080?token=0xec78db1c7244854420a2d8d8d8349c646ac60e06&tokenId=32303234303730363231303030302b30333030010200434e00554b0101000300&chainId=100```
+$ git clone https://github.com/AlphaWallet/TokenScript-Viewer
+
+3. Go to src directory and run ./tsviewer
+
+$ cd src
+src$ ./tsviewer
+
+You should see a new window, use "File -> Open" to open a tokenscript file (signed or unsigned doesn't matter). You will get something like this:
+
+![Screenshot](snapshot.png)
+
