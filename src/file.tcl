@@ -64,12 +64,16 @@ proc filemenu_open {} {
 
 # this procedure is called when a file is opened or supplied by commandline
 proc doc_load {fileid} {
-    global NS xp-attribute xp-card xp-dataObject xp-localisation
+    global NS xp-contract xp-attribute xp-card xp-dataObject xp-localisation xp-selection
     set doc [dom parse [read $fileid]]
 
     $doc selectNodesNamespaces $NS
     set root [$doc documentElement]
 
+    set nodes [$root selectNodes {//ts:contract}]
+    set rows [table .nb.f0.table $nodes {*}${xp-contract}]
+    .nb tab .nb.f0 -text "Smart Contracts ([llength $rows])"
+    
     set nodes [$root selectNodes {//ts:attribute}]
     set rows [table .nb.f1.table $nodes {*}${xp-attribute}]
     .nb tab .nb.f1 -text "Token Attributes ([llength $rows])"
@@ -86,8 +90,14 @@ proc doc_load {fileid} {
     set rows [table .nb.f4.table $nodes {*}${xp-localisation}]
     .nb tab .nb.f4 -text "Strings ([llength $rows])"
 
+    set nodes [$root selectNodes {//ts:selection}]
+    set rows [table .nb.f5.table $nodes {*}${xp-selection}]
+    .nb tab .nb.f5 -text "Selections ([llength $rows])"
+    
+    pack .nb.f0.table
     pack .nb.f1.table
     pack .nb.f2.table
     pack .nb.f3.table
     pack .nb.f4.table
+    pack .nb.f5.table
 }
