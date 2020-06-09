@@ -11,10 +11,10 @@ Here is the instruction:
 
 $ git clone https://github.com/AlphaWallet/TokenScript-Viewer
 
-3. Go to src directory and run ./tsviewer
+3. Go to src directory and run ./tsviewer.tcl
 
 $ cd src
-src$ ./tsviewer
+src$ ./tsviewer.tcl
 
 You should see a new window, use "File -> Open" to open a tokenscript file (signed or unsigned doesn't matter). You will get something like this:
 
